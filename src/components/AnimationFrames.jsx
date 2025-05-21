@@ -10,7 +10,7 @@ const AnimationFrames = ({
 	isLeft,
 }) => {
 	const [movers, setMovers] = useState([]);
-	const frameCount = 8;
+	const frameCount = 10;
 
 	useEffect(() => {
 		if (!isAnimating || !sourceRect || !targetRect) return;
