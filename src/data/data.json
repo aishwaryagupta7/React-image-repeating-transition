@@ -2,82 +2,82 @@
     {
       "id": "a04",
       "title": "drift",
-      "imgSrc": "/src/assets/img1.webp"
+      "imgSrc": "/public/assets/img1.webp"
     },
     {
       "id": "k18",
       "title": "veil",
-      "imgSrc": "/src/assets/img2.webp"
+      "imgSrc": "/public/assets/img2.webp"
     },
     {
       "id": "m45",
       "title": "ember",
-      "imgSrc": "/src/assets/img3.webp"
+      "imgSrc": "/public/assets/img3.webp"
     },
     {
       "id": "z12",
       "title": "gleam",
-      "imgSrc": "/src/assets/img4.webp"
+      "imgSrc": "/public/assets/img4.webp"
     },
     {
       "id": "j29",
       "title": "bloom",
-      "imgSrc": "/src/assets/img5.webp"
+      "imgSrc": "/public/assets/img5.webp"
     },
     {
       "id": "v67",
       "title": "whisper",
-      "imgSrc": "/src/assets/img6.webp"
+      "imgSrc": "/public/assets/img6.webp"
     },
     {
       "id": "z05",
       "title": "trace",
-      "imgSrc": "/src/assets/img7.webp"
+      "imgSrc": "/public/assets/img7.webp"
     },
     {
       "id": "q62",
       "title": "flicker",
-      "imgSrc": "/src/assets/img8.webp"
+      "imgSrc": "/public/assets/img8.webp"
     },
     {
       "id": "h71",
       "title": "grain",
-      "imgSrc": "/src/assets/img9.webp"
+      "imgSrc": "/public/assets/img9.webp"
     },
     {
       "id": "b90",
       "title": "pulse",
-      "imgSrc": "/src/assets/img10.webp"
+      "imgSrc": "/public/assets/img10.webp"
     },
     {
       "id": "l36",
       "title": "mist",
-      "imgSrc": "/src/assets/img11.webp"
+      "imgSrc": "/public/assets/img11.webp"
     },
     {
       "id": "y22",
       "title": "shard",
-      "imgSrc": "/src/assets/img12.webp"
+      "imgSrc": "/public/assets/img12.webp"
     },
     {
       "id": "x79",
       "title": "vapor",
-      "imgSrc": "/src/assets/img13.webp"
+      "imgSrc": "/public/assets/img13.webp"
     },
     {
       "id": "f13",
       "title": "glow",
-      "imgSrc": "/src/assets/img14.webp"
+      "imgSrc": "/public/assets/img14.webp"
     },
     {
       "id": "n48",
       "title": "flux",
-      "imgSrc": "/src/assets/img15.webp"
+      "imgSrc": "/public/assets/img15.webp"
     },
     {
       "id": "c65",
       "title": "spire",
-      "imgSrc": "/src/assets/img16.webp"
+      "imgSrc": "/public/assets/img16.webp"
     }
   ]
   
