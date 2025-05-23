@@ -66,7 +66,7 @@ function App() {
 			? thirdBatch[selectedCard.index]
 			: fourthBatch[selectedCard.index]
 		: null;
-	const tilt = selectedCard?.batch === "second" ? true : false;
+
 	return (
 		<div className="min-h-screen bg-white text-black p-5">
 			<AnimatePresence>
