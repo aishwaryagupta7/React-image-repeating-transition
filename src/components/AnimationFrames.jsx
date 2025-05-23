@@ -1,6 +1,32 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+// Utility function to get clip path animations (shared logic)
+const getClipPathAnimation = (batch) => {
+	const isThirdBatch = batch === "third";
+	const isFourthBatch = batch === "fourth";
+
+	const clipPathStart = isThirdBatch
+		? "inset(0% 0% 0% 100%)" // third: right→left
+		: isFourthBatch
+		? "inset(100% 0% 0% 0%)" // fourth: bottom→top
+		: "inset(0% 0% 100% 0%)"; // default: top→bottom
+
+	const clipPathVisible = "inset(0% 0% 0% 0%)";
+
+	const clipPathExit = isThirdBatch
+		? "inset(0% 100% 0% 0%)" // third exit
+		: isFourthBatch
+		? "inset(0% 0% 100% 0%)" // fourth exit (back to clipped bottom)
+		: "inset(100% 0% 0% 0%)"; // default exit
+
+	return {
+		initial: clipPathStart,
+		animate: clipPathVisible,
+		exit: clipPathExit,
+	};
+};
+
 const AnimationFrames = ({
 	isAnimating,
 	sourceRect,
@@ -8,25 +34,27 @@ const AnimationFrames = ({
 	imgSrc,
 	onAnimationComplete,
 	isLeft,
+	tilt = "false",
+	batch,
 }) => {
 	const [movers, setMovers] = useState([]);
-	const frameCount = 10;
+	const frameCount = 9;
 
 	useEffect(() => {
 		if (!isAnimating || !sourceRect || !targetRect) return;
 
-		// Create path between start and end elements
 		const frames = generateMotionPath(
 			sourceRect,
 			targetRect,
 			frameCount,
-			isLeft
+			isLeft,
+			tilt,
+			batch
 		);
 		setMovers(frames);
 
-		// Calculate total animation duration
-		const appearanceDuration = frameCount * 0.05; // Time for all frames to appear
-		const disappearanceDuration = 1; // Faster disappearance for non-last frames
+		const appearanceDuration = frameCount * 0.05;
+		const disappearanceDuration = 1;
 		const totalDuration = appearanceDuration + disappearanceDuration + 0.2;
 
 		const timer = setTimeout(() => {
@@ -34,38 +62,72 @@ const AnimationFrames = ({
 		}, totalDuration * 1000);
 
 		return () => clearTimeout(timer);
-	}, [isAnimating, sourceRect, targetRect, isLeft, onAnimationComplete]);
+	}, [
+		isAnimating,
+		sourceRect,
+		targetRect,
+		isLeft,
+		onAnimationComplete,
+		batch,
+		tilt,
+	]);
 
-	// Generate motion path between start and end elements
-	const generateMotionPath = (startRect, endRect, steps, isLeft) => {
+	function generateMotionPath(startRect, endRect, steps, isLeft, tilt, batch) {
 		const path = [];
 		const startCenter = {
-			x: startRect.left + startRect.width / 3,
+			x: startRect.left + startRect.width / 2,
 			y: startRect.top + startRect.height / 2,
 		};
 
-		const endCenter = {
-			x: endRect.left + endRect.width / 2,
-			y: endRect.top + endRect.height / 2,
-		};
+		// Calculate the actual final position where the panel image will be
+		const viewportWidth = window.innerWidth;
+		const viewportHeight = window.innerHeight;
+		const padding = 20; // p-5 = 20px
 
-		// For each step in the path
+		// Calculate final image dimensions (maintaining aspect ratio, max-h-screen, max-w-full)
+		const maxWidth = viewportWidth - padding * 2;
+		const maxHeight = viewportHeight - padding * 2;
+
+		// Use target rect dimensions as they represent the actual rendered size
+		const finalWidth = endRect.width;
+		const finalHeight = endRect.height;
+
+		// Calculate final position based on left/right justification
+		let finalX, finalY;
+
+		if (isLeft) {
+			// Left justified: image starts from left edge + padding
+			finalX = padding + finalWidth / 2;
+		} else {
+			// Right justified: image ends at right edge - padding
+			finalX = viewportWidth - padding - finalWidth / 2;
+		}
+
+		// Vertically centered
+		finalY = viewportHeight / 2;
+
+		const endCenter = { x: finalX, y: finalY };
+
+		// Only the third batch gets an arc
+		const arcHeight = batch === "third" ? 200 : 0;
+
+		// Generate frames but exclude the very last one
 		for (let i = 1; i < steps; i++) {
-			const t = i / (steps - 1);
+			const t = i / steps; // Changed to use steps instead of (steps - 1)
 			const eased = easeInOut(t);
 
-			// Lerp width and height
-			const width = lerp(startRect.width, endRect.width, eased);
-			const height = lerp(startRect.height, endRect.height, eased);
+			// Size interpolation
+			const width = lerp(startRect.width, finalWidth, eased);
+			const height = lerp(startRect.height, finalHeight, eased);
 
-			// Calculate position with straight line path
+			// Linear x + arc y
 			const x = lerp(startCenter.x, endCenter.x, t);
-			const y = lerp(startCenter.y, endCenter.y, t);
+			const y =
+				lerp(startCenter.y, endCenter.y, t) + Math.sin(Math.PI * t) * arcHeight;
 
-			// No rotation for cleaner look
-			const rotation = 0;
+			// Optional tilt
+			const rotation = tilt ? (i % 2 === 0 ? 5 : -5) : 0;
 
-			// Add this frame to the path
 			path.push({
 				id: i,
 				left: x - width / 2,
@@ -73,16 +135,12 @@ const AnimationFrames = ({
 				width,
 				height,
 				rotation,
-				delay: i * 0.06, // Staggered delay for sequential appearance
-				// Last frame has no disappearance, others disappear quickly after all frames appear
-				isLastFrame: i === steps - 1,
-				disappearDelay:
-					i === steps - 1 ? null : frameCount * 0.06 + (steps - i) * 0.03,
+				delay: i * 0.06,
 			});
 		}
 
 		return path;
-	};
+	}
 
 	// Linear interpolation helper
 	const lerp = (a, b, t) => a + (b - a) * t;
@@ -91,6 +149,8 @@ const AnimationFrames = ({
 	const easeInOut = (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t);
 
 	if (!isAnimating || movers.length === 0) return null;
+
+	const clipPaths = getClipPathAnimation(batch);
 
 	return (
 		<div className="fixed inset-0 pointer-events-none">
@@ -104,57 +164,35 @@ const AnimationFrames = ({
 							top: mover.top,
 							width: mover.width,
 							height: mover.height,
-							zIndex: 1000 + mover.id,
+							zIndex: 1500 + mover.id, // High enough to be visible, but still behind panel (z-2000)
 							overflow: "hidden",
+							rotate: mover.rotation,
 						}}
 						initial={{
 							opacity: 0,
-							clipPath: "inset(0% 0% 100% 0%)", // Start clipped from bottom
-							rotate: mover.rotation,
+							clipPath: clipPaths.initial,
 						}}
-						animate={
-							mover.isLastFrame
-								? {
-										// Last frame stays visible
-										opacity: [0, 1, 1],
-										clipPath: [
-											"inset(0% 0% 100% 0%)", // Start clipped from bottom
-											"inset(0% 0% 0% 0%)", // Fully visible
-											"inset(0% 0% 0% 0%)", // Stay fully visible
-										],
-								  }
-								: {
-										// Other frames appear and then quickly disappear
-										opacity: [0, 0.9, 0.9, 0],
-										clipPath: [
-											"inset(0% 0% 100% 0%)", // Start clipped from bottom
-											"inset(0% 0% 0% 0%)", // Fully visible
-											"inset(0% 0% 0% 0%)", // Stay visible briefly
-											"inset(100% 0% 0% 0%)", // Exit to top quickly
-										],
-								  }
-						}
-						transition={
-							mover.isLastFrame
-								? {
-										// Last frame transition - just appear and stay
-										times: [0, 0.6, 1],
-										duration: 0.6,
-										delay: mover.delay,
-										ease: "easeOut",
-								  }
-								: {
-										// Other frames transition - appear and disappear quickly
-										times: [0, 0.2, 0.7, 1],
-										duration: 1,
-										delay: mover.delay,
-										ease: "easeInOut",
-								  }
-						}>
+						animate={{
+							opacity: [0, 0.9, 0.9, 0],
+							clipPath: [
+								clipPaths.initial,
+								clipPaths.animate,
+								clipPaths.animate,
+								clipPaths.exit,
+							],
+						}}
+						transition={{
+							times: [0, 0.2, 0.7, 1],
+							duration: 1,
+							delay: mover.delay,
+							ease: "easeInOut",
+						}}>
 						<img
 							src={imgSrc || "/placeholder.svg"}
 							alt={`Animation frame ${mover.id}`}
-							className="w-full h-full object-cover"
+							className={`w-full h-full object-cover ${
+								batch === "fourth" ? "filter contrast-200" : ""
+							}`}
 						/>
 					</motion.div>
 				))}
