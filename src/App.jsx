@@ -77,33 +77,55 @@ function App() {
 						exit={{ opacity: 0 }}
 						transition={{ duration: 0.3 }}>
 						<header className="flex justify-between items-center mb-20">
-							<h1>Repeating Image Transition</h1>
+							<h1 className="font-bold text-sm lowercase">
+								Repeating Image Transition
+							</h1>
 							<nav>
-								<a href="https://tympanus.net/codrops/?p=92571">More info,</a>
-								<a href="https://github.com/codrops/RepeatingImageTransition/">
-									Code,
+								<a
+									className="lowercase font-bold text-sm"
+									href="https://tympanus.net/codrops/?p=92571">
+									More info,
 								</a>
-								<a href="https://tympanus.net/codrops/demos/">All demos</a>
+								<a
+									className="lowercase font-bold text-sm"
+									href="https://github.com/codrops/RepeatingImageTransition/">
+									code,
+								</a>
+								<a
+									className="lowercase font-bold text-sm"
+									href="https://tympanus.net/codrops/demos/">
+									all demos
+								</a>
 							</nav>
 							<nav>
-								<a href="https://tympanus.net/codrops/demos/?tag=page-transition">
-									Page-transition,
+								<a
+									className="lowercase font-bold text-sm"
+									href="https://tympanus.net/codrops/demos/?tag=page-transition">
+									page-transition,
 								</a>
-								<a href="https://tympanus.net/codrops/demos/?tag=repetition">
-									Repetition,
+								<a
+									className="lowercase font-bold text-sm"
+									href="https://tympanus.net/codrops/demos/?tag=repetition">
+									repetition,
 								</a>
-								<a href="https://tympanus.net/codrops/demos/?tag=grid">Grid</a>
+								<a
+									className="lowercase font-bold text-sm"
+									href="https://tympanus.net/codrops/demos/?tag=grid">
+									grid
+								</a>
 							</nav>
 						</header>
 						<div className="flex flex-row justify-between">
-							<h2 className="text-7xl font-bold mb-5">SHANE WEBER</h2>
-							<p className="flex items-end mb-4 text-xs">
+							<h2 className=" font-owners tracking-wider text-7xl font-extrabold mb-5">
+								SHANE WEBER
+							</h2>
+							<p className="flex items-end mb-4 text-xs font-medium">
 								effect 01: straight linear paths, smooth easing, clean timing,
 								minimal rotation.
 							</p>
 						</div>
 
-						<div className="grid grid-cols-8 gap-2 mb-10">
+						<div className="grid grid-cols-8 gap-1 mb-10">
 							{firstBatch.map((item, idx) => (
 								<Card
 									key={item.id}
@@ -117,14 +139,16 @@ function App() {
 						</div>
 
 						<div className="flex flex-row justify-between">
-							<h2 className="text-7xl font-bold mb-5">MANIKA JORGE</h2>
-							<p className="flex items-end mb-4 text-xs">
+							<h2 className=" font-owners tracking-wider text-7xl font-extrabold mb-5">
+								MANIKA JORGE
+							</h2>
+							<p className="flex items-end mb-4 text-xs font-medium">
 								effect 02: Adjusts mover count, rotation, timing, and animation
 								feel.
 							</p>
 						</div>
 
-						<div className="grid grid-cols-8 gap-2 mb-10">
+						<div className="grid grid-cols-8 gap-1 mb-10">
 							{secondBatch.map((item, idx) => (
 								<Card
 									key={item.id}
@@ -138,13 +162,15 @@ function App() {
 						</div>
 
 						<div className="flex flex-row justify-between">
-							<h2 className="text-7xl font-bold mb-5">ANGELA WONG</h2>
-							<p className="flex items-end mb-4 text-xs">
+							<h2 className=" font-owners tracking-wide text-7xl font-extrabold mb-5">
+								ANGELA WONG
+							</h2>
+							<p className="flex items-end mb-4 text-xs font-medium">
 								effect 03: Big arcs, smooth start, powerful snap, slow reveal.
 							</p>
 						</div>
 
-						<div className="grid grid-cols-8 gap-2 mb-10">
+						<div className="grid grid-cols-8 gap-1 mb-10">
 							{thirdBatch.map((item, idx) => (
 								<Card
 									key={item.id}
@@ -157,14 +183,16 @@ function App() {
 							))}
 						</div>
 
-						<div className="flex flex-row justify-between">
-							<h2 className="text-7xl font-bold mb-5">KAITO NAKAMO</h2>
-							<p className="flex items-end mb-4 text-xs">
+						<div className="flex flex-row justify-between ">
+							<h2 className=" font-owners tracking-wide text-7xl font-extrabold mb-5">
+								KAITO NAKAMO
+							</h2>
+							<p className="flex items-end mb-4 text-xs font-medium">
 								effect 04: Quick upward motion with bold blending and smooth
 								slow reveal.
 							</p>
 						</div>
-						<div className="grid grid-cols-8 gap-2">
+						<div className="grid grid-cols-8 gap-1">
 							{fourthBatch.map((item, idx) => (
 								<Card
 									key={item.id}

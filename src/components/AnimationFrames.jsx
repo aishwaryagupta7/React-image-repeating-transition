@@ -17,6 +17,57 @@ const CLIP_PATHS = {
 	},
 };
 
+function generateFrames(startRect, endRect, isLeft, tilt, batch) {
+	const frameCount = 10;
+	const frames = [];
+
+	const start = getRectCenter(startRect);
+	const end = getFinalPosition(endRect, isLeft);
+	const arcHeight = batch === "third" ? 200 : 0;
+
+	for (let i = 1; i < frameCount; i++) {
+		const progress = i / frameCount;
+		const eased = easeInOut(progress);
+
+		const width = lerp(startRect.width, endRect.width, eased);
+		const height = lerp(startRect.height, endRect.height, eased);
+		const x = lerp(start.x, end.x, progress);
+		const y =
+			lerp(start.y, end.y, progress) + Math.sin(Math.PI * progress) * arcHeight;
+
+		frames.push({
+			id: i,
+			left: x - width / 2,
+			top: y - height / 2,
+			width,
+			height,
+			rotation: tilt ? (i % 2 === 0 ? 5 : -5) : 0,
+			delay: i * 0.06,
+		});
+	}
+
+	return frames;
+}
+
+function getRectCenter(rect) {
+	return {
+		x: rect.left + rect.width / 2,
+		y: rect.top + rect.height / 2,
+	};
+}
+
+function getFinalPosition(endRect, isLeft) {
+	const padding = 20;
+	const x = isLeft
+		? padding + endRect.width / 2
+		: window.innerWidth - padding - endRect.width / 2;
+
+	return { x, y: window.innerHeight / 2 };
+}
+
+const lerp = (a, b, t) => a + (b - a) * t;
+const easeInOut = (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t);
+
 const AnimationFrames = ({
 	isAnimating,
 	sourceRect,
@@ -101,56 +152,5 @@ const AnimationFrames = ({
 		</div>
 	);
 };
-
-function generateFrames(startRect, endRect, isLeft, tilt, batch) {
-	const frameCount = 10;
-	const frames = [];
-
-	const start = getRectCenter(startRect);
-	const end = getFinalPosition(endRect, isLeft);
-	const arcHeight = batch === "third" ? 200 : 0;
-
-	for (let i = 1; i < frameCount; i++) {
-		const progress = i / frameCount;
-		const eased = easeInOut(progress);
-
-		const width = lerp(startRect.width, endRect.width, eased);
-		const height = lerp(startRect.height, endRect.height, eased);
-		const x = lerp(start.x, end.x, progress);
-		const y =
-			lerp(start.y, end.y, progress) + Math.sin(Math.PI * progress) * arcHeight;
-
-		frames.push({
-			id: i,
-			left: x - width / 2,
-			top: y - height / 2,
-			width,
-			height,
-			rotation: tilt ? (i % 2 === 0 ? 5 : -5) : 0,
-			delay: i * 0.06,
-		});
-	}
-
-	return frames;
-}
-
-function getRectCenter(rect) {
-	return {
-		x: rect.left + rect.width / 2,
-		y: rect.top + rect.height / 2,
-	};
-}
-
-function getFinalPosition(endRect, isLeft) {
-	const padding = 20;
-	const x = isLeft
-		? padding + endRect.width / 2
-		: window.innerWidth - padding - endRect.width / 2;
-
-	return { x, y: window.innerHeight / 2 };
-}
-
-const lerp = (a, b, t) => a + (b - a) * t;
-const easeInOut = (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t);
 
 export default AnimationFrames;

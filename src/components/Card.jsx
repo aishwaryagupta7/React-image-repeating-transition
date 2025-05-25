@@ -12,10 +12,9 @@ const Card = ({ imgSrc, title, id, onClick, index }) => {
 
 	return (
 		<motion.div
-			className="flex flex-col justify-center w-full mb-5 cursor-pointer"
+			className="flex flex-col justify-center w-full mb-14 cursor-pointer"
 			onClick={handleClick}
 			ref={cardRef}
-			layout
 			initial={{ opacity: 0, y: 20 }}
 			animate={{ opacity: 1, y: 0 }}
 			exit={{ opacity: 0, scale: 0.9 }}
@@ -28,7 +27,7 @@ const Card = ({ imgSrc, title, id, onClick, index }) => {
 				/>
 			</div>
 			<motion.div className="mt-1 flex justify-end">
-				<p className="text-xs font-medium text-black">
+				<p className="text-xs font-bold lowercase text-black">
 					{title} - <span>{id}</span>
 				</p>
 			</motion.div>
